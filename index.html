@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es" data-era="1980">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChronoStream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bevan&family=Orbitron:wght@600;800&family=Bungee&family=Poppins:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1a1030;--panel:#2a1b4d;--ink:#f6eaff;--mute:#a995cf;--acc:#ff2e93;--acc2:#00e5ff;--line:#ff2e93;--hf:'Orbitron',sans-serif;--bf:'Courier Prime',monospace;--r:2px;--bw:2px;--glow:0 0 12px var(--acc);--bgimg:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
+[data-era="1970"]{--bg:#4a2c14;--panel:#f1dfb4;--ink:#3b2210;--mute:#7d5a35;--acc:#d9531e;--acc2:#e8a317;--line:#3b2210;--hf:'Bevan',serif;--bf:'Courier Prime',monospace;--r:14px;--bw:3px;--glow:none;--bgimg:radial-gradient(circle at 20% 20%,rgba(232,163,23,.25) 0 60px,transparent 61px),radial-gradient(circle at 80% 70%,rgba(217,83,30,.25) 0 90px,transparent 91px)}
+[data-era="1990"]{--bg:#0e7c7b;--panel:#fff7e0;--ink:#1b1b3a;--mute:#5b5b86;--acc:#ff4f9a;--acc2:#7a3cff;--line:#1b1b3a;--hf:'Bungee',sans-serif;--bf:'Space Grotesk',sans-serif;--r:0;--bw:3px;--glow:none;--bgimg:linear-gradient(135deg,transparent 0 48%,rgba(255,224,0,.35) 48% 52%,transparent 52%) 0 0/40px 40px}
+[data-era="2000"]{--bg:linear-gradient(#5fb4ff,#1c64c9);--panel:#eaf4ff;--ink:#0b2a55;--mute:#44668f;--acc:#2a8c2a;--acc2:#1c64c9;--line:#7aa7e0;--hf:'Trebuchet MS',sans-serif;--bf:Tahoma,Verdana,sans-serif;--r:10px;--bw:1px;--glow:none;--bgimg:none}
+[data-era="2010"]{--bg:#eceff1;--panel:#fff;--ink:#263238;--mute:#78909c;--acc:#f4511e;--acc2:#00acc1;--line:#cfd8dc;--hf:'Poppins',sans-serif;--bf:'Poppins',sans-serif;--r:6px;--bw:1px;--glow:none;--bgimg:none}
+[data-era="2020"]{--bg:#0b0d10;--panel:#14181d;--ink:#e8ecf1;--mute:#8a94a3;--acc:#8ab4ff;--acc2:#b8f2c9;--line:#242b33;--hf:'Space Grotesk',sans-serif;--bf:'Space Grotesk',sans-serif;--r:14px;--bw:1px;--glow:none;--bgimg:none}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);background-image:var(--bgimg);background-attachment:fixed;color:var(--ink);font-family:var(--bf);transition:background .4s,color .4s}
+h1,h2,h3,.hf{font-family:var(--hf);margin:0}
+header{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:12px 18px;background:var(--panel);border-bottom:var(--bw) solid var(--line)}
+.logo{font-size:1.7rem;color:var(--acc);text-shadow:var(--glow);letter-spacing:.5px}
+.logo small{display:block;font-family:var(--bf);font-size:.7rem;color:var(--mute);text-shadow:none}
+.tuner{display:flex;flex:1;gap:6px;flex-wrap:wrap;align-items:stretch;min-width:280px}
+.tuner button,.play{font:inherit;font-family:var(--hf);cursor:pointer;border:var(--bw) solid var(--line);background:var(--panel);color:var(--ink);padding:8px 14px;border-radius:var(--r)}
+.tuner button[aria-pressed=true]{background:var(--acc);color:#fff;box-shadow:var(--glow)}
+.tuner button:hover{border-color:var(--acc)}
+.tuner small{display:block;font-family:var(--bf);font-size:.62rem;opacity:.8}
+.play{background:var(--acc2);color:#000;font-weight:800;padding:8px 22px}
+.play:hover{filter:brightness(1.15)}
+:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+main{display:grid;grid-template-columns:220px minmax(0,1fr) 300px;gap:14px;padding:14px;align-items:start}
+aside,.card{background:var(--panel);border:var(--bw) solid var(--line);border-radius:var(--r)}
+nav.cats{padding:8px;position:sticky;top:8px}
+nav.cats h2{font-size:.85rem;padding:6px 8px;color:var(--acc)}
+nav.cats button{display:block;width:100%;text-align:left;font:inherit;font-size:.84rem;color:var(--ink);background:none;border:0;border-left:4px solid transparent;padding:9px 8px;cursor:pointer;border-radius:var(--r)}
+nav.cats button:hover{background:rgba(128,128,128,.15)}
+nav.cats button[aria-current=true]{border-left-color:var(--acc);background:rgba(128,128,128,.2);font-weight:700}
+.stage{background:#000;border:var(--bw) solid var(--line);border-radius:var(--r);aspect-ratio:16/9;position:relative;overflow:hidden;box-shadow:var(--glow)}
+.stage iframe{width:100%;height:100%;border:0;display:block}
+.stage .idle{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff;padding:20px;background:repeating-linear-gradient(0deg,#222 0 2px,#111 2px 4px)}
+.nowbar{display:flex;justify-content:space-between;gap:10px;padding:8px 2px;font-size:.85rem;color:var(--mute)}
+.search{display:flex;gap:8px;margin:10px 0}
+.search input{flex:1;font:inherit;padding:11px 12px;border:var(--bw) solid var(--line);background:var(--panel);color:var(--ink);border-radius:var(--r)}
+.search button{font:inherit;font-family:var(--hf);padding:0 20px;border:0;background:var(--acc);color:#fff;cursor:pointer;border-radius:var(--r)}
+.ctx{font-size:.8rem;color:var(--mute);margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.item{background:var(--panel);border:var(--bw) solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;text-align:left;font:inherit;color:var(--ink);padding:0}
+.item:hover,.item[aria-current=true]{border-color:var(--acc);box-shadow:var(--glow)}
+.item img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#222}
+.item div{padding:7px 8px;font-size:.78rem}
+.item b{display:block;line-height:1.25;max-height:3.7em;overflow:hidden}
+.item span{color:var(--mute);font-size:.7rem}
+.more{margin:12px auto;display:block;font:inherit;font-family:var(--hf);padding:10px 24px;background:var(--acc2);color:#000;border:0;cursor:pointer;border-radius:var(--r)}
+.ficha{padding:12px;position:sticky;top:8px;max-height:calc(100vh - 16px);overflow:auto}
+.ficha h2{font-size:1rem;color:var(--acc);border-bottom:var(--bw) solid var(--line);padding-bottom:6px;margin-bottom:8px}
+.ficha h3{font-size:1.05rem;margin-bottom:8px;line-height:1.25}
+.ficha dl{margin:0;font-size:.8rem}
+.ficha dt{color:var(--mute);margin-top:8px;font-size:.7rem}
+.ficha dd{margin:0;word-break:break-word}
+.ficha .desc{max-height:180px;overflow:auto;white-space:pre-line}
+.ficha a{color:var(--acc2)}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:var(--r);padding:1px 6px;margin:2px 2px 0 0;font-size:.7rem}
+.msg{padding:16px;color:var(--mute)}
+@media(max-width:1000px){main{grid-template-columns:1fr}nav.cats,.ficha{position:static;max-height:none}nav.cats{display:flex;overflow-x:auto;gap:4px}nav.cats h2{display:none}nav.cats button{white-space:nowrap;width:auto;border-left:0;border-bottom:4px solid transparent}nav.cats button[aria-current=true]{border-bottom-color:var(--acc)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo hf">ChronoStream<small>Zapping a través de las décadas</small></div>
+  <div class="tuner" id="tuner" role="group" aria-label="Sintonizador de años"></div>
+  <button class="play" id="rnd">▶ Zapping</button>
+</header>
+<main>
+  <nav class="cats card" id="cats" aria-label="Categorías"><h2>CANALES</h2></nav>
+  <section>
+    <div class="stage" id="stage"><div class="idle"><h2 class="hf">SIN SEÑAL</h2><p>Elegí una época y un canal, o apretá Zapping para sintonizar algo al azar.</p></div></div>
+    <div class="nowbar"><span id="now">—</span><span id="ctxline"></span></div>
+    <form class="search" id="sf"><input id="q" type="search" placeholder="Buscar en esta categoría y época (ej: Sega)" aria-label="Buscar"><button>Buscar</button></form>
+    <div class="ctx" id="ctx"></div>
+    <div class="grid" id="grid"></div>
+    <button class="more" id="more" hidden>Ver más resultados</button>
+  </section>
+  <aside class="ficha card" id="ficha"><h2 class="hf">FICHA TÉCNICA</h2><p class="msg">Aquí aparecerán todos los datos del video en reproducción.</p></aside>
+</main>
+<script>
+const CATS=[
+["Videojuegos Comerciales",'(commercial OR "tv spot" OR advertisement OR promo) AND ("video game" OR videogame OR nintendo OR sega OR atari OR playstation OR xbox)'],
+["Videojuegos General",'("video game" OR videogames OR gameplay OR arcade OR nintendo OR sega OR playstation OR "retro gaming")'],
+["Promos, VHS e Infomerciales de Madrugada",'(infomercial OR "vhs" OR "tv promo" OR "late night" OR "commercials" OR "tv commercial")'],
+["Noticias / Noticieros",'(news OR newscast OR noticiero OR "news broadcast" OR "evening news")'],
+["Videos Musicales",'("music video" OR "video clip" OR mtv OR "video musical")'],
+["Anime / Cartoons",'(anime OR cartoon OR cartoons OR animation OR "saturday morning")'],
+["Series de Tv",'("tv series" OR "television series" OR sitcom OR episode OR "tv show")'],
+["Cine B / Películas de Ciencia Ficción y Terror",'("b-movie" OR "science fiction" OR horror OR "sci-fi" OR "cult movie" OR monster)'],
+["Paranormal, Misterio y Enigmas",'(paranormal OR ufo OR mystery OR unexplained OR cryptid OR "bigfoot" OR ghost OR occult)'],
+["Tecnología y Cultura Cyber",'(computer OR cyberpunk OR hacker OR internet OR "computer chronicles" OR technology OR cyber OR "personal computer")'],
+["Videos de Musica",'(concert OR "live performance" OR "live music" OR band OR "live in")']
+];
+const ERAS=[[1970,1979],[1980,1989],[1990,1999],[2000,2009],[2010,2019],[2020,2026]];
+let era=1980,cat=0,page=1,term='',cur=null,busy=false;
+const $=id=>document.getElementById(id);
+const PAGE=24;
+function range(){const e=ERAS.find(x=>x[0]===era);return e}
+function qs(extra){
+  const [a,b]=range();
+  const t=extra!==undefined?extra:term;
+  return `mediatype:movies AND (${CATS[cat][1]}) AND ${t?`(${t.replace(/[()\[\]{}:"\\]/g,' ')}) AND `:''}date:[${a}-01-01 TO ${b}-12-31]`;
+}
+async function api(q,rows,pg){
+  const u='https://archive.org/advancedsearch.php?q='+encodeURIComponent(q)+'&fl[]=identifier&fl[]=title&fl[]=date&fl[]=creator&rows='+rows+'&page='+pg+'&sort[]='+encodeURIComponent('downloads desc')+'&output=json';
+  const r=await fetch(u);if(!r.ok)throw new Error('HTTP '+r.status);
+  return (await r.json()).response;
+}
+function build(){
+  $('tuner').innerHTML=ERAS.map(e=>`<button aria-pressed="${e[0]===era}" data-e="${e[0]}">${e[0]}<small>${e[0]}–${e[1]}</small></button>`).join('');
+  $('cats').innerHTML='<h2 class="hf">CANALES</h2>'+CATS.map((c,i)=>`<button data-c="${i}" ${i===cat?'aria-current="true"':''}>${c[0]}</button>`).join('');
+}
+function setEra(e){era=e;document.documentElement.dataset.era=e;build();runList(true)}
+$('tuner').onclick=e=>{const b=e.target.closest('button');if(b)setEra(+b.dataset.e)};
+$('cats').onclick=e=>{const b=e.target.closest('button');if(b){cat=+b.dataset.c;build();runList(true)}};
+$('sf').onsubmit=e=>{e.preventDefault();term=$('q').value.trim();runList(true)};
+$('more').onclick=()=>{page++;runList(false)};
+$('rnd').onclick=randomPlay;
+
+async function runList(reset){
+  if(busy)return;busy=true;
+  if(reset){page=1;$('grid').innerHTML='';$('more').hidden=true}
+  const [a,b]=range();
+  $('ctx').textContent=`${CATS[cat][0]} · ${a}–${b}${term?' · “'+term+'”':''} — cargando…`;
+  try{
+    const r=await api(qs(),PAGE,page);
+    const docs=r.docs||[];
+    $('ctx').textContent=`${CATS[cat][0]} · ${a}–${b}${term?' · “'+term+'”':''} — ${r.numFound.toLocaleString('es')} resultados`;
+    if(!docs.length&&reset)$('grid').innerHTML='<p class="msg">Sin resultados. Probá otra palabra, otro canal u otra época.</p>';
+    $('grid').insertAdjacentHTML('beforeend',docs.map(card).join(''));
+    $('more').hidden=page*PAGE>=r.numFound;
+  }catch(err){$('ctx').textContent='';$('grid').innerHTML='<p class="msg">No se pudo conectar con Internet Archive ('+err.message+'). Revisá tu conexión e intentá de nuevo.</p>'}
+  busy=false;
+}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function card(d){
+  const y=(d.date||'').slice(0,4);
+  return `<button class="item" data-id="${esc(d.identifier)}" ${cur===d.identifier?'aria-current="true"':''}><img loading="lazy" alt="" src="https://archive.org/services/img/${encodeURIComponent(d.identifier)}"><div><b>${esc(Array.isArray(d.title)?d.title[0]:d.title)}</b><span>${esc(y)}${d.creator?' · '+esc(Array.isArray(d.creator)?d.creator[0]:d.creator):''}</span></div></button>`;
+}
+$('grid').onclick=e=>{const b=e.target.closest('.item');if(b){play(b.dataset.id);window.scrollTo({top:0,behavior:'smooth'})}};
+
+async function randomPlay(){
+  $('now').textContent='Sintonizando…';
+  try{
+    const q=qs('');
+    const head=await api(q,1,1);
+    const n=Math.min(head.numFound,10000);
+    if(!n){$('now').textContent='No hay canales en esta época para esta categoría.';return}
+    const r=await api(q,1,1+Math.floor(Math.random()*n));
+    if(r.docs[0])play(r.docs[0].identifier);
+  }catch(err){$('now').textContent='Error de conexión: '+err.message}
+}
+async function play(id){
+  cur=id;
+  $('stage').innerHTML=`<iframe src="https://archive.org/embed/${encodeURIComponent(id)}" allowfullscreen allow="autoplay; fullscreen" title="Reproductor"></iframe>`;
+  document.querySelectorAll('.item').forEach(i=>i.toggleAttribute('aria-current',i.dataset.id===id)||i.removeAttribute('aria-current'));
+  document.querySelectorAll('.item').forEach(i=>{if(i.dataset.id===id)i.setAttribute('aria-current','true');else i.removeAttribute('aria-current')});
+  $('now').textContent='Cargando ficha…';
+  $('ficha').innerHTML='<h2 class="hf">FICHA TÉCNICA</h2><p class="msg">Cargando…</p>';
+  try{
+    const m=await (await fetch('https://archive.org/metadata/'+encodeURIComponent(id))).json();
+    ficha(id,m);
+  }catch(err){$('ficha').innerHTML='<h2 class="hf">FICHA TÉCNICA</h2><p class="msg">No se pudo cargar la ficha.</p>'}
+}
+function arr(v){return v==null?[]:Array.isArray(v)?v:[v]}
+function plain(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent.trim()}
+function ficha(id,m){
+  const md=m.metadata||{},files=m.files||[];
+  const title=arr(md.title)[0]||id;
+  $('now').textContent=title;
+  $('ctxline').textContent=arr(md.date)[0]?String(arr(md.date)[0]).slice(0,10):'';
+  const row=(k,v)=>v&&String(v).length?`<dt>${k}</dt><dd>${v}</dd>`:'';
+  const tags=a=>arr(a).flatMap(s=>String(s).split(/\s*;\s*/)).filter(Boolean).map(t=>`<span class="tag">${esc(t)}</span>`).join('');
+  const fmts={};files.forEach(f=>{if(f.format)fmts[f.format]=(fmts[f.format]||0)+1});
+  const size=m.item_size?(m.item_size/1048576).toFixed(1)+' MB':'';
+  const desc=arr(md.description).map(plain).join('\n\n');
+  $('ficha').innerHTML=`<h2 class="hf">FICHA TÉCNICA</h2><h3>${esc(title)}</h3><dl>
+  ${row('Identificador',esc(id))}
+  ${row('Creador / Autor',esc(arr(md.creator).join(', ')))}
+  ${row('Fecha',esc(arr(md.date)[0]))}
+  ${row('Año',esc(arr(md.year)[0]))}
+  ${row('Duración',esc(arr(md.runtime)[0]))}
+  ${row('Tipo de medio',esc(md.mediatype))}
+  ${row('Colecciones',tags(md.collection))}
+  ${row('Temas / Etiquetas',tags(md.subject))}
+  ${row('Idioma',esc(arr(md.language).join(', ')))}
+  ${row('País',esc(arr(md.country).join(', ')))}
+  ${row('Productora / Publicador',esc(arr(md.publisher).join(', ')))}
+  ${row('Fuente',esc(arr(md.source).join(', ')))}
+  ${row('Sponsor',esc(arr(md.sponsor).join(', ')))}
+  ${row('Subido por',esc(arr(md.uploader).join(', ')))}
+  ${row('Publicado en Archive',esc(arr(md.publicdate)[0]))}
+  ${row('Licencia',md.licenseurl?`<a href="${esc(md.licenseurl)}" target="_blank" rel="noopener">${esc(md.licenseurl)}</a>`:'')}
+  ${row('Derechos',esc(arr(md.rights).join(', ')))}
+  ${row('Descargas',m.item_size||md.downloads?esc(arr(md.downloads)[0]||''):'')}
+  ${row('Archivos',files.length+(size?' ('+size+')':''))}
+  ${row('Formatos',Object.entries(fmts).map(([k,v])=>`<span class="tag">${esc(k)} ×${v}</span>`).join(''))}
+  ${row('Servidor',esc(m.server))}
+  ${row('Descripción',desc?`<div class="desc">${esc(desc)}</div>`:'')}
+  ${row('Enlace',`<a href="https://archive.org/details/${encodeURIComponent(id)}" target="_blank" rel="noopener">Ver en Internet Archive</a>`)}
+  </dl>`;
+}
+build();runList(true);
+</script>
+</body>
+</html>
